@@ -16,7 +16,6 @@ import { useContext } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
 import { AuthContext } from "./context/authContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import Likes from "./components/likes/Likes";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -45,7 +44,6 @@ function App() {
     if (!currentUser) {
       return <Navigate to="/login" />;
     }
-
     return children;
   };
 
@@ -66,16 +64,6 @@ function App() {
           path: "/profile/:id",
           element: <Profile />,
         },
-        {
-          path: "/profile/:id/likes",
-          element: <Likes />,
-        },
-        // {
-        //   path: "/profile/:id/following",
-        //   element: <FollowedUser />,
-        // },
-
-
       ],
     },
     {
@@ -96,3 +84,26 @@ function App() {
 }
 
 export default App;
+
+{/* <Router>
+<Routes>
+  <Route
+    path="*"
+    element={
+      <ProtectedRoute>
+        <Layout />
+        <Routes>
+          <Route index element={<Home />} />
+          <Route path="profile/:id" element={<Profile />}>
+            <Route path="likes" element={<Likes />} />
+            <Route path="followings" element={<Followings />} />
+            <Route path="followers" element={<Followers />} />
+          </Route>
+        </Routes>
+      </ProtectedRoute>
+    }
+  />
+  <Route path="/login" element={<Login />} />
+  <Route path="/register" element={<Register />} />
+</Routes>
+</Router>  */}

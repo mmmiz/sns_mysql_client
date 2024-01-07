@@ -31,10 +31,21 @@
 // }
 
 
+// import React from 'react'
+
+// export default function FollowedUser({FollowedUser}) {
+//   return (
+//     <div>
+//       <p>{FollowedUser.name}</p>
+//     </div>
+//   )
+// }
+
+
 import React from 'react'
 
-export default function FollowedUser() {
+export default function Followings() {
   return (
-    <div>FollowedUser</div>
+    <div>Followings</div>
   )
 }

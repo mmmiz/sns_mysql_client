@@ -20,6 +20,7 @@ import { Link } from "react-router-dom";
 
 const LeftBar = () => {
   const { currentUser } = useContext(AuthContext);
+  
   // const [allUsers, setAllUsers] = useState([]);
   
   // useEffect(() => {
@@ -53,7 +54,7 @@ const LeftBar = () => {
             <span>{currentUser.username}</span>
           </Link>
           </div>
-          <dr />
+          <hr />
 
           {/* <div>
             <h4>User Lists</h4>

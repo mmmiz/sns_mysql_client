@@ -32,7 +32,6 @@ const Update = ({ setOpenUpdate, user }) => {
   };
 
   const queryClient = useQueryClient();
-
   const mutation = useMutation(
     (user) => {
       return axios.put("/users", user);
@@ -45,20 +44,36 @@ const Update = ({ setOpenUpdate, user }) => {
     }
   );
 
-  const handleClick =  (e) => {
+  const handleClick = async (e) => {
     e.preventDefault();
+
+    try {
+      let coverUrl = user.coverPic;
+      if (cover) {
+        coverUrl = await upload(cover);
+      }
+
+      let profileUrl = user.profilePic;
+      if (profile) {
+        profileUrl = await upload(profile);
+      }
+
+      const updatedUser = {
+        ...texts,
+        coverPic: coverUrl,
+        profilePic: profileUrl,
+      };
+
+      mutation.mutate(updatedUser);
+      setCover(null);
+      setProfile(null);
+
+      setOpenUpdate(false);
+    } catch (error) {
+      console.error("Error updating:", error);
+    }
   }
-    // TODO: find a better way to get image URL
-    
-    let coverUrl;
-    let profileUrl;
-    coverUrl = cover ?  upload(cover) : user.coverPic;
-    profileUrl = profile ?  upload(profile) : user.profilePic;
-    
-    mutation.mutate({ ...texts, coverPic: coverUrl, profilePic: profileUrl });
-    setOpenUpdate(false);
-    setCover(null);
-    setProfile(null);
+
 
   return (
     <div className="update">
@@ -66,6 +81,7 @@ const Update = ({ setOpenUpdate, user }) => {
         <h1>Update Your Profile</h1>
         <form>
           <div className="files">
+
             <label htmlFor="cover">
               <span>Cover Picture</span>
               <div className="imgContainer">
@@ -80,12 +96,14 @@ const Update = ({ setOpenUpdate, user }) => {
                 <CloudUploadIcon className="icon" />
               </div>
             </label>
+
             <input
               type="file"
               id="cover"
               style={{ display: "none" }}
               onChange={(e) => setCover(e.target.files[0])}
             />
+
             <label htmlFor="profile">
               <span>Profile Picture</span>
               <div className="imgContainer">
@@ -100,6 +118,7 @@ const Update = ({ setOpenUpdate, user }) => {
                 <CloudUploadIcon className="icon" />
               </div>
             </label>
+
             <input
               type="file"
               id="profile"
@@ -107,6 +126,7 @@ const Update = ({ setOpenUpdate, user }) => {
               onChange={(e) => setProfile(e.target.files[0])}
             />
           </div>
+
           <label>Email</label>
           <input
             type="text"
@@ -114,13 +134,13 @@ const Update = ({ setOpenUpdate, user }) => {
             name="email"
             onChange={handleChange}
           />
-          <label>Password</label>
+          {/* <label>Password</label>
           <input
             type="text"
             value={texts.password}
             name="password"
             onChange={handleChange}
-          />
+          /> */}
           <label>Name</label>
           <input
             type="text"
