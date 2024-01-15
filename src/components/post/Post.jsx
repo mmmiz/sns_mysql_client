@@ -119,7 +119,11 @@ const Post = ({ post }) => {
           </div>
         </div>
 
-        {commentOpen && <Comments postId={post.id} />}
+        {commentOpen && 
+          <div key={post.id}>
+            <Comments postId={post.id} />
+          </div>
+        }
       </div>
 
     </div>

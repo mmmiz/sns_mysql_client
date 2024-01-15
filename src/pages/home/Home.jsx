@@ -10,12 +10,13 @@ const Home = () => {
   // if (currentUser && currentUser.token) {
     // console.log("Token Information:", currentUser);
   // }
+  
 
   return (
     <div className="home">
       {/* <Stories/> */}
       <Share/>
-      <Posts/>
+      <Posts userId={currentUser.id}/>
     </div>
   )
 }

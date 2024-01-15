@@ -41,12 +41,32 @@
 
           @include mobile{
             display: none;
+            // width: 10px;
+
           }
 
           @include tablet{
             width: 200px;
           }
         }
+      }
+      
+      .search-results {
+        position: absolute;
+        top: 100%;
+        left: 25%;
+        background-color: #fff; 
+        border: 1px solid #ccc; 
+        padding: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+        z-index: 1;
+
+        .search-result {
+          &:hover {
+            background-color: gray;  
+          }
+        }
+        
       }
     }
 

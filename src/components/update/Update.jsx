@@ -15,12 +15,15 @@ const Update = ({ setOpenUpdate, user }) => {
     website: user.website,
   });
 
+  // console.log(user);
+
   const upload = async (file) => {
     console.log(file)
     try {
       const formData = new FormData();
       formData.append("file", file);
       const res = await axios.post("/upload", formData);
+      
       return res.data;
     } catch (err) {
       console.log(err);
@@ -31,14 +34,15 @@ const Update = ({ setOpenUpdate, user }) => {
     setTexts((prev) => ({ ...prev, [e.target.name]: [e.target.value] }));
   };
 
+  // UPDATE USER INFO
   const queryClient = useQueryClient();
   const mutation = useMutation(
     (user) => {
       return axios.put("/users", user);
+      // (axios.put("/users", user)) and the backend (db.query(..., [req.body.email, req.body.password, ..., userInfo.id], ...)) should match.
     },
     {
       onSuccess: () => {
-        // Invalidate and refetch
         queryClient.invalidateQueries(["user"]);
       },
     }
@@ -46,17 +50,10 @@ const Update = ({ setOpenUpdate, user }) => {
 
   const handleClick = async (e) => {
     e.preventDefault();
-
     try {
-      let coverUrl = user.coverPic;
-      if (cover) {
-        coverUrl = await upload(cover);
-      }
-
-      let profileUrl = user.profilePic;
-      if (profile) {
-        profileUrl = await upload(profile);
-      }
+      const coverUrl = cover ? await upload(cover) : user.coverPic;
+      const profileUrl = profile ? await upload(profile) : user.profilePic;
+  
 
       const updatedUser = {
         ...texts,
@@ -65,14 +62,43 @@ const Update = ({ setOpenUpdate, user }) => {
       };
 
       mutation.mutate(updatedUser);
-      setCover(null);
-      setProfile(null);
+      mutation.isSuccess && setCover(null);
+      mutation.isSuccess && setProfile(null);
 
       setOpenUpdate(false);
     } catch (error) {
       console.error("Error updating:", error);
     }
   }
+
+// // DELETE PIC 
+//     const picMutation = useMutation(
+//       async () => {
+//         try {
+//           const response = await axios.put(`/users?picToDelete=${user?.id}`);
+//           console.log(response.data);
+//           return response.data;
+//         } catch (error) {
+//           throw error.response.data;
+//         }
+//       },
+//       {
+//         onSuccess: () => {
+//           queryClient.invalidateQueries(["user"]); 
+//         },
+//         onError: (error) => {
+//           console.error("Error deleting picture:", error);
+//         },
+//       }
+//     );
+//     const picDeleteHandle = () => {
+//       if (user?.id) {
+//         picMutation.mutate();
+//         setOpenUpdate(false);
+//       } else {
+//         console.error("User ID is undefined.");
+//       }
+//     };
 
 
   return (
@@ -95,6 +121,8 @@ const Update = ({ setOpenUpdate, user }) => {
                 />
                 <CloudUploadIcon className="icon" />
               </div>
+              
+            {/* <button onClick={picDeleteHandle}>delete</button> */}
             </label>
 
             <input
@@ -134,13 +162,13 @@ const Update = ({ setOpenUpdate, user }) => {
             name="email"
             onChange={handleChange}
           />
-          {/* <label>Password</label>
+          <label>Password</label>
           <input
             type="text"
             value={texts.password}
             name="password"
             onChange={handleChange}
-          /> */}
+          />
           <label>Name</label>
           <input
             type="text"

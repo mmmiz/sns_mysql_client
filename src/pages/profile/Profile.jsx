@@ -37,16 +37,16 @@ const Profile = () => {
 
 
   // USER PROFILE
-  const { isLoading, error, data } = useQuery(["user"], () =>
+  const { isLoading, error, data, refetch: refetchUser } = useQuery(["user"], () =>
     axios.get("/users/find/" + userId).then((res) => {
-      console.log(res.data);
+      // console.log(res.data);
       return res.data;
     })
   );
 
 
   // MY OWN POSTs
-  const {isLoading: postIsLoading, error: postError, data: postData } = useQuery(["posts"], () =>
+  const {isLoading: postIsLoading, error: postError, data: postData, refetch: refetchPosts } = useQuery(["posts"], () =>
     axios.get("/posts/myposts", { params: { userId } })
     .then((res) => {
       const data = res.data;
@@ -54,6 +54,17 @@ const Profile = () => {
       return data;
     })
   ); //   { params: { userId: id } }
+
+
+  useEffect(() => {
+    const refetch = async() => {
+      await refetchUser();
+      await refetchPosts();
+    }
+    refetch();
+  }, [userId, refetchUser, refetchPosts]);
+
+
 
   // MY lIKES params version 
 //   const { data: likedPosts } = useQuery(["mylikes"], () =>
